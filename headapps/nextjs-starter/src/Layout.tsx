@@ -21,6 +21,7 @@ interface RouteFields {
   OgTitle?: Field;
   OgDescription?: Field;
   OgImage?: ImageField;
+  headLinks: HTMLLink[];
 }
 
 const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
