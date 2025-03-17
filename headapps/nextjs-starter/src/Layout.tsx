@@ -3,25 +3,23 @@
  */
 import React from 'react';
 import Head from 'next/head';
-import { Placeholder, LayoutServiceData, Field, HTMLLink } from '@sitecore-jss/sitecore-jss-nextjs';
-import config from 'temp/config';
+import { Placeholder, LayoutServiceData, Field, ImageField } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
-
-// Prefix public assets with a public URL to enable compatibility with Sitecore Experience Editor.
-// If you're not supporting the Experience Editor, you can remove this.
-const publicUrl = config.publicUrl;
+import SitecoreStyles from 'src/components/SitecoreStyles';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
-  headLinks: HTMLLink[];
 }
 
 interface RouteFields {
   [key: string]: unknown;
   Title?: Field;
+  OgTitle?: Field;
+  OgDescription?: Field;
+  OgImage?: ImageField;
 }
 
-const Layout = ({ layoutData, headLinks }: LayoutProps): JSX.Element => {
+const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
   const { route } = layoutData.sitecore;
   const fields = route?.fields as RouteFields;
   const isPageEditing = layoutData.sitecore.context.pageEditing;
@@ -30,12 +28,20 @@ const Layout = ({ layoutData, headLinks }: LayoutProps): JSX.Element => {
   return (
     <>
       <Scripts />
+      <SitecoreStyles layoutData={layoutData} />
       <Head>
         <title>{fields?.Title?.value?.toString() || 'Page'}</title>
-        <link rel="icon" href={`${publicUrl}/favicon.ico`} />
-        {headLinks.map((headLink) => (
-          <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
-        ))}
+        <link rel="icon" href="/favicon.ico" />
+
+        {/* OG Data */}
+        <meta name="title" property="og:title" content={fields?.OgTitle?.value?.toString()} />
+        <meta
+          name="description"
+          property="og:description"
+          content={fields?.OgDescription?.value?.toString()}
+        />
+        <meta name="image" property="og:image" content={fields?.OgImage?.value?.src?.toString()} />
+        <meta name="type" property="og:type" content={route?.templateName} />
       </Head>
 
       {/* root placeholder for the app, which we add components to using route data */}
