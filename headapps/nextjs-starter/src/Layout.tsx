@@ -3,9 +3,13 @@
  */
 import React from 'react';
 import Head from 'next/head';
-import { Placeholder, LayoutServiceData, Field, ImageField } from '@sitecore-content-sdk/nextjs';
 import Scripts from 'src/Scripts';
-import SitecoreStyles from 'src/components/SitecoreStyles';
+import {
+  LayoutServiceData,
+  Field,
+  ImageField,
+  Placeholder,
+} from '@sitecore-jss/sitecore-jss-nextjs';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
@@ -28,7 +32,6 @@ const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
   return (
     <>
       <Scripts />
-      <SitecoreStyles layoutData={layoutData} />
       <Head>
         <title>{fields?.Title?.value?.toString() || 'Page'}</title>
         <link rel="icon" href="/favicon.ico" />
