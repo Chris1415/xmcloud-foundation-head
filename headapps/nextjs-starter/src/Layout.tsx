@@ -9,10 +9,12 @@ import {
   Field,
   ImageField,
   Placeholder,
+  HTMLLink,
 } from '@sitecore-jss/sitecore-jss-nextjs';
 
 interface LayoutProps {
   layoutData: LayoutServiceData;
+  headLinks: HTMLLink[];
 }
 
 interface RouteFields {
@@ -21,10 +23,9 @@ interface RouteFields {
   OgTitle?: Field;
   OgDescription?: Field;
   OgImage?: ImageField;
-  headLinks: HTMLLink[];
 }
 
-const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
+const Layout = ({ layoutData, headLinks }: LayoutProps): JSX.Element => {
   const { route } = layoutData.sitecore;
   const fields = route?.fields as RouteFields;
   const isPageEditing = layoutData.sitecore.context.pageEditing;
@@ -46,6 +47,9 @@ const Layout = ({ layoutData }: LayoutProps): JSX.Element => {
         />
         <meta name="image" property="og:image" content={fields?.OgImage?.value?.src?.toString()} />
         <meta name="type" property="og:type" content={route?.templateName} />
+        {headLinks.map((headLink) => (
+          <link rel={headLink.rel} key={headLink.href} href={headLink.href} />
+        ))}
       </Head>
 
       {/* root placeholder for the app, which we add components to using route data */}
