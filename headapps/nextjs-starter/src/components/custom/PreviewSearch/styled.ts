@@ -18,7 +18,8 @@ export const PreviewSearchContent = styled(PreviewSearch.Content)`
   animation-duration: 500ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  width: var(--radix-popover-trigger-width);
+  width: 800px;
+  z-index: 1000;
   max-height: var(--radix-popover-content-available-height);
   background: ${theme.vars.palette.grey['100']};
   box-shadow: 2px 5px 5px 5px ${theme.vars.palette.grey['400']};
