@@ -67,7 +67,7 @@ export const PreviewSearchComponent = ({
     },
   } = usePreviewSearch<ArticleModel, InitialState>({
     state: {
-      suggestionsList: [{ suggestion: 'title_context_aware', max: 10 }],
+      suggestionsList: [{ suggestion: 'auto_named_suggester_4', max: 10 }],
       itemsPerPage: defaultItemsPerPage,
     },
   });
