@@ -12,7 +12,13 @@ type SuggestionBlockProps = {
   disabled?: boolean;
 };
 
-const SuggestionBlock = ({ items, title, blockId, filterAttribute, disabled }: SuggestionBlockProps) => {
+const SuggestionBlock = ({
+  items,
+  title,
+  blockId,
+  filterAttribute,
+  disabled,
+}: SuggestionBlockProps) => {
   const { onSuggestionClick } = usePreviewSearchActions();
   return (
     <>
