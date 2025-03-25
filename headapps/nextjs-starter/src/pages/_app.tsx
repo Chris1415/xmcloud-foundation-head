@@ -4,10 +4,13 @@ import { SitecorePageProps } from 'lib/page-props';
 import Bootstrap from 'src/Bootstrap';
 
 import 'assets/main.scss';
-import { WidgetsProvider } from '@sitecore-search/react';
+import { PageController, WidgetsProvider } from '@sitecore-search/react';
 
 function App({ Component, pageProps }: AppProps<SitecorePageProps>): JSX.Element {
   const { dictionary, ...rest } = pageProps;
+
+  PageController.getContext().setLocaleLanguage('en');
+  PageController.getContext().setLocaleCountry('us');
 
   return (
     <>
