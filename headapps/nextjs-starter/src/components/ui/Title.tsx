@@ -79,16 +79,18 @@ export const Default = (props: TitleProps): JSX.Element => {
   }
 
   return (
-    <ComponentContent styles={props?.params?.styles} id={props?.params?.RenderingIdentifier}>
-      <>
-        {sitecoreContext.pageEditing ? (
-          <Text field={text} />
-        ) : (
-          <Link field={link}>
+    <>
+      <ComponentContent styles={props?.params?.styles} id={props?.params?.RenderingIdentifier}>
+        <>
+          {sitecoreContext.pageEditing ? (
             <Text field={text} />
-          </Link>
-        )}
-      </>
-    </ComponentContent>
+          ) : (
+            <Link field={link}>
+              <Text field={text} />
+            </Link>
+          )}
+        </>
+      </ComponentContent>
+    </>
   );
 };
