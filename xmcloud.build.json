@@ -25,7 +25,7 @@
         "enabled": true,
         "type": "sxa",
         "buildCommand": "build",
-        "runCommand": "start:vue"
+        "runCommand": "jss start"
       }
     },
     "postActions": {
