@@ -13,6 +13,7 @@ import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing
 import client from 'lib/sitecore-client';
 import components from 'lib/component-map';
 import scConfig from 'sitecore.config';
+import { loadTokens } from 'Services/TokenService';
 
 const SitecorePage = ({ notFound, componentProps, layout }: SitecorePageProps): JSX.Element => {
   useEffect(() => {
@@ -72,6 +73,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
   let props = {};
   const path = extractPath(context);
   let page;
+
+  // Get my custom tokens here
+  loadTokens();
 
   if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
     page = await client.getDesignLibraryData(context.previewData);

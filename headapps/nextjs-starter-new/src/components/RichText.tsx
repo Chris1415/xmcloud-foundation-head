@@ -1,5 +1,6 @@
 import React, { JSX } from 'react';
-import { Field, RichText as JssRichText } from '@sitecore-content-sdk/nextjs';
+import { Field } from '@sitecore-content-sdk/nextjs';
+import RichTextWrapper from './custom/wrapper/RichTextWrapper';
 
 interface Fields {
   Text: Field<string>;
@@ -12,7 +13,7 @@ export type RichTextProps = {
 
 export const Default = (props: RichTextProps): JSX.Element => {
   const text = props.fields ? (
-    <JssRichText field={props.fields.Text} />
+    <RichTextWrapper field={props.fields.Text} doReplacement={true} />
   ) : (
     <span className="is-empty-hint">Rich text</span>
   );
