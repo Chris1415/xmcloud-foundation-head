@@ -2,7 +2,7 @@ import { LayoutServicePageState } from '@sitecore-content-sdk/nextjs';
 import { GraphQLRequestClient } from '@sitecore-content-sdk/nextjs/client';
 import scConfig from 'sitecore.config';
 
-export interface TokenHandlingResponse {
+interface TokenHandlingResponse {
   replacedText: string;
   isTextReplaced: boolean;
   additionalMessage: string;
@@ -74,6 +74,12 @@ async function fetchCmsTokens(): Promise<Token[]> {
 }
 let TOKENS: Token[] = [];
 
+export function AvailableTokens() {
+  return TOKENS?.map((token) => {
+    return token.key;
+  });
+}
+
 export async function loadTokens() {
   const fetchedTokens = await fetchCmsTokens();
   TOKENS = [...functionalTokens, ...fetchedTokens];
@@ -96,51 +102,22 @@ export function handleToken(
   const isOpenBreakestThere = input.indexOf('{{');
   const isClosedBracketsThere = input.indexOf('}}');
   if (!isOpenBreakestThere || !isClosedBracketsThere) {
-    console.log('Replacing - NOT DOING ANYTHING');
     return tokenHandlingResponse;
   }
 
-  const matches = input.match('{{(.*?)}}');
-  const match = matches == null ? '' : matches[0];
-  const matchFound = match
-    ? TOKENS.map((element) => {
-        return element.text;
-      }).includes(match)
-    : false;
-  // Lets assume we only have one token per field
   let newText = input;
 
   switch (pageMode) {
     case LayoutServicePageState.Edit:
-      console.log('Replacing - Edit');
-      console.log(input);
-      if (matchFound) {
-        tokenHandlingResponse.additionalMessage = '';
-        tokenHandlingResponse.isTextReplaced = true;
-      } else {
-        tokenHandlingResponse.additionalMessage =
-          'Invalid Token recognized - Valid tokens are ' +
-          TOKENS.map((index) => {
-            return index?.text + ' ';
-          });
-        tokenHandlingResponse.isTextReplaced = true;
-      }
       break;
     case LayoutServicePageState.Preview:
-      console.log('Replacing - Preview');
-      console.log(input);
-      if (matchFound) {
-        newText = newText.replace(
-          match,
-          '<p style="color:green;display:inline;font-weight: bold">' + match + '</p>'
+      TOKENS.forEach((token) => {
+        const replacement = typeof token.text == 'string' ? token.text : token.text();
+        newText = newText.replaceAll(
+          token.key,
+          '<span style="color:green;display:inline;font-weight: bold">' + replacement + '</span>'
         );
-      } else {
-        newText = newText.replace(
-          match,
-          '<p style="color:red;display:inline;font-weight: bold">' + match + '</p>'
-        );
-      }
-
+      });
       newText = newText
         .replace('<p>', "<p style='display:inline'>")
         .replace('<p d', "<p style='display:inline' d");
@@ -149,8 +126,6 @@ export function handleToken(
       console.log(newText);
       break;
     case LayoutServicePageState.Normal:
-      console.log('Replacing - Normal');
-      // We can do that one nicer afterwards
       TOKENS.forEach((token) => {
         newText = newText.replaceAll(
           token.key,

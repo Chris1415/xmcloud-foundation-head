@@ -4,8 +4,8 @@ import {
   RichTextField,
   useSitecoreContext,
 } from '@sitecore-content-sdk/nextjs';
-import { useEffect } from 'react';
-import { handleToken, loadTokens } from 'Services/TokenService';
+import { useEffect, useState } from 'react';
+import { AvailableTokens, handleToken, loadTokens } from 'Services/TokenService';
 
 export default function RichTextWrapper({
   field,
@@ -15,8 +15,13 @@ export default function RichTextWrapper({
   doReplacement: boolean;
 }) {
   const sitecoreContext = useSitecoreContext();
+  const [allToken, setAllToken] = useState<string[]>();
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     loadTokens();
+    setTimeout(() => {
+      setAllToken(AvailableTokens());
+    }, 2000);
   }, []);
 
   if (!doReplacement) {
@@ -28,10 +33,45 @@ export default function RichTextWrapper({
 
   switch (mode) {
     case LayoutServicePageState.Edit:
-      return <JssRichText field={field} />;
+      return (
+        <>
+          <JssRichText field={field} />
+        </>
+      );
     case LayoutServicePageState.Preview:
+      return (
+        <>
+          <div
+            onClick={() => setOpen(!open)}
+            dangerouslySetInnerHTML={{ __html: mappedContent?.replacedText }}
+          ></div>
+
+          <div
+            style={{
+              border: '1px dotted black',
+              padding: '12px',
+              fontSize: 12,
+              display: open ? 'block' : 'none',
+            }}
+          >
+            <p>Available Token are:</p>
+            <ul style={{ fontSize: 6 }}>
+              {allToken?.map((token) => {
+                return <li key={token}>{token}</li>;
+              })}
+            </ul>
+          </div>
+        </>
+      );
     case LayoutServicePageState.Normal:
-      return <div dangerouslySetInnerHTML={{ __html: mappedContent?.replacedText }}></div>;
+      return (
+        <>
+          <div
+            onClick={() => setOpen(!open)}
+            dangerouslySetInnerHTML={{ __html: mappedContent?.replacedText }}
+          ></div>
+        </>
+      );
 
     default:
       return undefined;
